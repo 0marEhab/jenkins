@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Login to DockerHub') {
+            steps {
+                sh '''
+                    echo "-" | docker login -u ifron --password-stdin
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    cd /jenkins/
+                    docker build -t ifron/myimage:latest .
+                '''
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                sh '''
+                    docker push ifron/myimage:latest
+                '''
+            }
+        }
+    }
+}
